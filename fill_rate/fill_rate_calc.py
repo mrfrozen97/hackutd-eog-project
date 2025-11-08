@@ -1,15 +1,42 @@
 import requests
 import pandas as pd
+import matplotlib.pyplot as plt
 
 BASE_URL = "https://hackutd2025.eog.systems"
 
-# 1. Get cauldron information (max capacities)
-info = requests.get(f"{BASE_URL}/api/Information/cauldrons").json()
-max_volumes = {c['id']: c['max_volume'] for c in info}
-
-# 2. Pull historical level data (large range)
-# You can change start/end timestamps if needed
+# Pull historical data
 data = requests.get(f"{BASE_URL}/api/Data?start_date=0&end_date=2000000000").json()
+
+# Convert JSON to DataFrame (flattened)
+rows = []
+for entry in data:
+    timestamp = entry["timestamp"]
+    for cid, level in entry["cauldron_levels"].items():
+        rows.append([timestamp, cid, level])
+
+df = pd.DataFrame(rows, columns=["timestamp", "cauldron_id", "level"])
+
+# Convert timestamp and sort
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+df = df.sort_values(by=["timestamp"])
+
+# Filter only cauldron_001
+df_1 = df[df['cauldron_id'] == "cauldron_001"]
+
+# === Plot ===
+plt.figure(figsize=(10,5))
+plt.plot(df_1['timestamp'], df_1['level'], label="Cauldron 001", linewidth=2)
+
+plt.title("Potion Level Over Time – Cauldron 001")
+plt.xlabel("Time")
+plt.ylabel("Level (Liters)")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# for i in data:
+#     print(i)
 
 # Convert to DataFrame for easy analysis
 records = []
