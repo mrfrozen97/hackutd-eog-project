@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 
 BASE_URL = "https://hackutd2025.eog.systems"
 
-# Pull historical data
+# Fetch historical data
 data = requests.get(f"{BASE_URL}/api/Data?start_date=0&end_date=2000000000").json()
 
-# Convert JSON to DataFrame (flattened)
+# Convert JSON to DataFrame
 rows = []
 for entry in data:
     timestamp = entry["timestamp"]
@@ -15,19 +15,18 @@ for entry in data:
         rows.append([timestamp, cid, level])
 
 df = pd.DataFrame(rows, columns=["timestamp", "cauldron_id", "level"])
-
-# Convert timestamp and sort
 df['timestamp'] = pd.to_datetime(df['timestamp'])
 df = df.sort_values(by=["timestamp"])
 
-# Filter only cauldron_001
-df_1 = df[df['cauldron_id'] == "cauldron_001"]
+# === Plot all cauldrons ===
+plt.figure(figsize=(12,6))
 
-# === Plot ===
-plt.figure(figsize=(10,5))
-plt.plot(df_1['timestamp'], df_1['level'], label="Cauldron 001", linewidth=2)
+unique_ids = df['cauldron_id'].unique()
+for cid in unique_ids:
+    df_temp = df[df['cauldron_id'] == cid]
+    plt.plot(df_temp['timestamp'], df_temp['level'], label=cid)
 
-plt.title("Potion Level Over Time – Cauldron 001")
+plt.title("Potion Levels Over Time – All Cauldrons")
 plt.xlabel("Time")
 plt.ylabel("Level (Liters)")
 plt.grid(True)
@@ -35,34 +34,22 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# for i in data:
-#     print(i)
 
-# Convert to DataFrame for easy analysis
-records = []
-for row in data:
-    t = row["timestamp"]
-    for cid, level in row["cauldron_levels"].items():
-        records.append([t, cid, level])
-
-df = pd.DataFrame(records, columns=["timestamp", "cauldron_id", "level"])
-
-# Ensure timestamps ordered
-df['timestamp'] = pd.to_datetime(df['timestamp'])
-df = df.sort_values(by=["cauldron_id", "timestamp"])
-
-# Compute per-minute fill rate: Δvolume / Δtime
+# === Compute Average Fill Rate for Each Cauldron ===
 fill_rates = {}
 
-for cid in df['cauldron_id'].unique():
-    temp = df[df['cauldron_id'] == cid].copy()
-    temp['delta'] = temp['level'].diff()
+for cid in unique_ids:
+    df_temp = df[df['cauldron_id'] == cid].sort_values(by="timestamp")
+    df_temp["diff"] = df_temp["level"].diff()  # change per minute
 
-    # average change per minute
-    avg_rate = temp['delta'].mean()
-    fill_rates[cid] = avg_rate
+    # Positive slopes only (when filling)
+    positive = df_temp[df_temp["diff"] > 0]["diff"]
 
-# Print results nicely
-print("=== Fill Rates (liters per minute) ===")
-for cid, rate in fill_rates.items():
-    print(f"{cid} : {rate:.3f} L/min   (Max capacity = {max_volumes[cid]})")
+    if len(positive) > 0:
+        fill_rates[cid] = positive.mean()
+    else:
+        fill_rates[cid] = 0
+
+print("\n=== Average Fill Rates (Liters per Minute) ===")
+for c, r in fill_rates.items():
+    print(f"{c}: {r:.3f}")
