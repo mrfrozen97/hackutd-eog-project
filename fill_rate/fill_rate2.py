@@ -3,11 +3,6 @@ import pandas as pd
 import numpy as np
 from rdp import rdp
 
-
-# -----------------------------------------------------------
-# ✅ Minimal slope analyzer class (only calculates slopes)
-# -----------------------------------------------------------
-
 class SlopeAnalyzer:
     def __init__(self, timestamps, levels, epsilon=20):
         """
@@ -111,3 +106,48 @@ print(f"Average positive slope: {an.average_positive_slope():.3f} L/min")
 print(f"Average negative slope: {an.average_negative_slope():.3f} L/min")
 
 print(an.inflection_points())
+
+def get_negative_intervals_ending_on(inflection_points, target_date):
+    """
+    Finds negative slope intervals that end on a specific calendar date.
+    """
+    found_intervals = []
+    
+    if len(inflection_points) < 2:
+        return found_intervals
+
+    for i in range(len(inflection_points) - 1):
+        start_time, start_value = inflection_points[i]
+        end_time, end_value = inflection_points[i+1]
+        
+        # --- Check 1: Is the slope negative? ---
+        is_negative_slope = end_value < start_value
+        
+        # --- Check 2: Does the segment end on our target date? ---
+        matches_target_date = end_time.date() == target_date
+        
+        if is_negative_slope and matches_target_date:
+            
+            time_taken = end_time - start_time
+            
+            # --- NEW: Calculate the drain volume ---
+            # (The starting level minus the ending level)
+            drain_volume = start_value - end_value
+            
+            found_intervals.append({
+                "interval": (start_time, end_time),
+                "end_point": (end_time, end_value),
+                "duration": time_taken,
+                "drain_volume": drain_volume  # <-- Added this
+            })
+            
+    return found_intervals
+
+print("===== Drain Info with Volumes =====")
+drain_infos = get_negative_intervals_ending_on(an.inflection_points(), target_date)
+for info in drain_infos:
+    interval = info["interval"]
+    end_point = info["end_point"]
+    duration = info["duration"]
+    volume = info["drain_volume"]
+    print(f"Interval: {interval}, End Point: {end_point}, Duration: {duration}, Drain Volume: {volume:.2f} L")
