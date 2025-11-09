@@ -1,11 +1,12 @@
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
+from util import detect_long_term_trend_changes
 
 BASE_URL = "https://hackutd2025.eog.systems"
 
 # Fetch historical data
-data = requests.get(f"{BASE_URL}/api/Data?start_date=0&end_date=2000000000").json()
+data = requests.get(f"{BASE_URL}/api/Data?start_date=1762224474&end_date=1762231674").json()
 
 # Convert JSON to DataFrame
 rows = []
@@ -15,14 +16,16 @@ for entry in data:
         rows.append([timestamp, cid, level])
 
 df = pd.DataFrame(rows, columns=["timestamp", "cauldron_id", "level"])
-df['timestamp'] = pd.to_datetime(df['timestamp'])
+df['timestamp'] = pd.to_datetime(df['timestamp'], utc=True)
+
+# Convert to UTC seconds (Unix time)
 df = df.sort_values(by=["timestamp"])
 
 # === Plot all cauldrons ===
 plt.figure(figsize=(12,6))
 
 unique_ids = df['cauldron_id'].unique()
-for cid in unique_ids:
+for cid in unique_ids[:1]:
     df_temp = df[df['cauldron_id'] == cid]
     plt.plot(df_temp['timestamp'], df_temp['level'], label=cid)
 
@@ -53,3 +56,4 @@ for cid in unique_ids:
 print("\n=== Average Fill Rates (Liters per Minute) ===")
 for c, r in fill_rates.items():
     print(f"{c}: {r:.3f}")
+
