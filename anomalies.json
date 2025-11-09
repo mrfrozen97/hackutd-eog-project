@@ -732,6 +732,80 @@
                     "type": "TICKET_ANOMALY"
                 }
             ]
+        },
+        "2025-11-10": {
+            "cauldron_001": [
+                {
+                    "volume": 95.8,
+                    "ticket_id": "TT_20251110_128",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_002": [
+                {
+                    "volume": 55.57,
+                    "ticket_id": "TT_20251110_127",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_004": [
+                {
+                    "volume": 95.1,
+                    "ticket_id": "TT_20251110_137",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_005": [
+                {
+                    "volume": 96.26,
+                    "ticket_id": "TT_20251110_138",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_009": [
+                {
+                    "volume": 99.87,
+                    "ticket_id": "TT_20251110_149",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_010": [
+                {
+                    "volume": 81.39,
+                    "ticket_id": "TT_20251110_148",
+                    "type": "TICKET_ANOMALY"
+                }
+            ]
+        },
+        "2025-11-11": {
+            "cauldron_006": [
+                {
+                    "volume": 94.41,
+                    "ticket_id": "TT_20251111_141",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_007": [
+                {
+                    "volume": 97.51,
+                    "ticket_id": "TT_20251111_142",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_008": [
+                {
+                    "volume": 35.45,
+                    "ticket_id": "TT_20251111_140",
+                    "type": "TICKET_ANOMALY"
+                }
+            ],
+            "cauldron_012": [
+                {
+                    "volume": 94.37,
+                    "ticket_id": "TT_20251111_139",
+                    "type": "TICKET_ANOMALY"
+                }
+            ]
         }
     },
     "matches": {
@@ -1615,11 +1689,13 @@
                 }
             ]
         },
-        "2025-11-09": {}
+        "2025-11-09": {},
+        "2025-11-10": {},
+        "2025-11-11": {}
     },
     "metadata": {
         "start_date": "2025-10-30",
-        "end_date": "2025-11-09",
+        "end_date": "2025-11-11",
         "volume_tolerance": 1.5
     }
 }

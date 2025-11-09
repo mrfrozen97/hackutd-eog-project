@@ -2,7 +2,8 @@ import requests
 import pandas as pd
 from datetime import date, datetime
 import itertools
-import json # <-- 1. IMPORT JSON LIBRARY
+import json
+from pathlib import Path
 
 # --- Import our custom analyzer tools from the other file ---
 from slope_analyzer import SlopeAnalyzer, get_negative_intervals_ending_on
@@ -11,12 +12,10 @@ from slope_analyzer import SlopeAnalyzer, get_negative_intervals_ending_on
 # 1. SETUP: Define global settings
 # -----------------------------------------------------------
 BASE_URL = "https://hackutd2025.eog.systems"
-
-# --- You can change these ---
-START_DATE = "2025-10-30"
-END_DATE = "2025-11-09" # Inclusive
 VOLUME_TOLERANCE = 1.5 # +/- 1.5 Liters
-# ----------------------------
+#
+# --- START_DATE and END_DATE are now fetched in Section 2 ---
+#
 
 # -----------------------------------------------------------
 # 2. FETCH ALL COMMON DATA (Cauldrons, Tickets, Levels)
@@ -24,10 +23,22 @@ VOLUME_TOLERANCE = 1.5 # +/- 1.5 Liters
 print("Fetching all required data one time...")
 
 try:
+    # --- (CHANGED) Fetch Tickets API first to get the date range ---
+    tickets_response_json = requests.get(f"{BASE_URL}/api/Tickets").json()
+    all_tickets = tickets_response_json.get('transport_tickets', [])
+    
+    # --- (NEW) Extract start and end dates from metadata ---
+    date_range = tickets_response_json['metadata']['date_range']
+    # Split on 'T' to get just the date part (e.g., '2025-10-30')
+    START_DATE = date_range['start'].split('T')[0]
+    END_DATE = date_range['end'].split('T')[0]
+    
+    print(f"Date range set by Tickets API: {START_DATE} to {END_DATE}")
+    # --- (END OF NEW BLOCK) ---
+
     cauldrons_response = requests.get(f"{BASE_URL}/api/Information/cauldrons").json()
     all_cauldron_ids = [c['id'] for c in cauldrons_response]
-    tickets_response = requests.get(f"{BASE_URL}/api/Tickets").json()
-    all_tickets = tickets_response.get('transport_tickets', [])
+    
     level_data = requests.get(f"{BASE_URL}/api/Data?start_date=0&end_date=1762645088").json()
 
     rows = []
@@ -47,15 +58,15 @@ except Exception as e:
 
 # -----------------------------------------------------------
 # 3. INITIALIZE STORAGE FOR JSON OUTPUT
+# ... (This section is unchanged) ...
 # -----------------------------------------------------------
-# Keys will be dates, values will be lists of events/matches for that date.
 all_anomalies = {}
 all_matches = {}
 
 # -----------------------------------------------------------
 # 4. MAIN ANALYSIS LOOP
+# ... (This section is unchanged) ...
 # -----------------------------------------------------------
-
 try:
     date_iterator = pd.date_range(start=START_DATE, end=END_DATE, freq='D')
     print(f"Starting analysis for {len(date_iterator)} days ({START_DATE} to {END_DATE})\n")
@@ -168,7 +179,6 @@ for current_date_dt in date_iterator:
                 found_combo_match = False
 
                 # Try combinations from 2 tickets up to all remaining tickets
-                # Note: We skip r=1 since that was already covered in Phase 1
                 for r in range(2, len(unmatched_tickets) + 1):
                     for combo in itertools.combinations(unmatched_tickets, r):
                         combo_sum = sum(ticket['amount_collected'] for ticket in combo)
@@ -249,7 +259,26 @@ for current_date_dt in date_iterator:
 
 # -----------------------------------------------------------
 # 5. SAVE RESULTS TO JSON
+# ... (This section is unchanged, still saves to React public/ folder) ...
 # -----------------------------------------------------------
+try:
+    REACT_APP_FOLDER_NAME = 'cauldron-dashboard'
+    
+    SCRIPT_DIR = Path(__file__)
+    PUBLIC_DIR = SCRIPT_DIR.parent / REACT_APP_FOLDER_NAME / 'public'
+    
+    if not PUBLIC_DIR.is_dir():
+        print(f"Warning: Directory not found: {PUBLIC_DIR}")
+        print("Saving 'anomalies.json' to the local script directory instead.")
+        OUTPUT_FILE_PATH = 'anomalies.json'
+    else:
+        OUTPUT_FILE_PATH = PUBLIC_DIR / 'anomalies.json'
+        print(f"Output path set to: {OUTPUT_FILE_PATH}")
+
+except Exception as e:
+    print(f"Warning: Error creating path ({e}). Saving to local directory instead.")
+    OUTPUT_FILE_PATH = 'anomalies.json'
+
 
 final_output = {
     "anomalies": all_anomalies,
@@ -262,9 +291,9 @@ final_output = {
 }
 
 try:
-    with open('anomalies.json', 'w') as f:
+    with open(OUTPUT_FILE_PATH, 'w') as f:
         json.dump(final_output, f, indent=4)
-    print(f"Results successfully saved to anomalies.json")
+    print(f"\nResults successfully saved to {OUTPUT_FILE_PATH}")
 except Exception as e:
     print(f"CRITICAL ERROR saving JSON file: {e}")
 
