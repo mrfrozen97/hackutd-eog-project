@@ -1,0 +1,657 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "HackUTD2025.API",
+    "description": "API for HackUTD 2025 - Cauldron Monitoring and Transport System",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Data": {
+      "get": {
+        "tags": [
+          "Data"
+        ],
+        "summary": "Retrieves historical data within the specified date range.",
+        "description": "Gives each cauldron level over time.\n\nThe trend line will go up as the liquid is brewed.\n\nIt will go down when it is hauled away by a courier witch.\n\nWhen a courier witch hauls it away, she SHOULD create a ticket at the end of the day (see <a href=\"https://hackutd2025.eog.systems/api/Tickets\">/api/Tickets</a>) with how much she brew she bought, but sometimes witches aren't the most honest people.\n\nExample, use <a href=\"https://hackutd2025.eog.systems/api/Data\">https://hackutd2025.eog.systems/api/Data</a> to get all data. \n\nUse <a href=\"https://hackutd2025.eog.systems/api/Data/?start_date=1762478048&end_date=1762482227\">https://hackutd2025.eog.systems/api/Data?start_date=1762478048&end_date=1762482227</a> for a subset between the given time range.",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "The start date as a Unix timestamp (optional).",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "The end date as a Unix timestamp (optional).",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricalDataDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricalDataDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HistoricalDataDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Data/metadata": {
+      "get": {
+        "tags": [
+          "Data"
+        ],
+        "summary": "Retrieves metadata about the historical data.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalDataMetadataDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalDataMetadataDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalDataMetadataDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Information/network": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Retrieves network information.",
+        "description": "It takes some amount of time for a courier witch to travel from cauldron to caldron or from market to cauldron. \n\nThis data ultimately creates a graph. \n\nThis data is critical for calculating an optimal routing algorithm for the courier witches.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetworkDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Information/market": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Retrieves market information.",
+        "description": "This returns the latitude and longitude and name of the market. \n\nThere will only ever be one market, and the information is purely for visualization purposes.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Information/couriers": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Retrieves courier witches information.",
+        "description": "This shows each courier witch and the amount of brew then can haul to the market before their broom caldron is full. \n\nThis information is important when determining the minimal amount of witches needed and their optimal route.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourierDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourierDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourierDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Information/cauldrons": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Retrieves cauldron information.",
+        "description": "This shows the amount of brew each cauldron can hold before it overflow. \n\nWhen planning how the courier witches should haul brew, it's important these cauldron don't overflow ever (also see /api/Data). \n\nThe latitude and longitude can be used for visualization purposes.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CauldronDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CauldronDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CauldronDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Information/graph/neighbors/{nodeId}": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "summary": "Retrieves undirected neighbors for a given node.",
+        "description": "Using this may a bit more helpful than the directed neighbors. \n\nRoutes between cauldrons are bidirectional.",
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NeighborDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NeighborDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NeighborDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Information/graph/neighbors/directed/{nodeId}": {
+      "get": {
+        "tags": [
+          "Information"
+        ],
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NeighborDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NeighborDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NeighborDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Tickets": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Retrieves all tickets.",
+        "description": "Every time a courier witch buys brew and hauls it away, she creates an invoice ticket. \n\nIt will contain the amount purchased, the date, the courier witch's unique id, the cauldron she took it from, and the ticket id. \n\nPlease make sure these ticket are honest and complete because some witches are known to be evil. \n\nSee (<a href=\"https://hackutd2025.eog.systems/api/Data\">/api/Data</a>) to ensure these tickets are honest.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CauldronDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "max_volume": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CauldronLevelsDto": {
+        "type": "object",
+        "properties": {
+          "cauldron_001": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_002": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_003": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_004": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_005": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_006": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_007": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_008": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_009": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_010": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_011": {
+            "type": "number",
+            "format": "double"
+          },
+          "cauldron_012": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CourierDto": {
+        "type": "object",
+        "properties": {
+          "courier_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "max_carrying_capacity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DateRange": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "nullable": true
+          },
+          "end": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EdgeDto": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "nullable": true
+          },
+          "to": {
+            "type": "string",
+            "nullable": true
+          },
+          "travel_time_minutes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HistoricalDataDto": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cauldron_levels": {
+            "$ref": "#/components/schemas/CauldronLevelsDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HistoricalDataMetadataDto": {
+        "type": "object",
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "end_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "interval_minutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarketDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NeighborDto": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "nullable": true
+          },
+          "cost": {
+            "type": "string",
+            "format": "date-span"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NetworkDto": {
+        "type": "object",
+        "properties": {
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EdgeDto"
+            },
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TicketDto": {
+        "type": "object",
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "cauldron_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount_collected": {
+            "type": "number",
+            "format": "double"
+          },
+          "courier_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TicketMetadataDto": {
+        "type": "object",
+        "properties": {
+          "total_tickets": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "suspicious_tickets": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date_range": {
+            "$ref": "#/components/schemas/DateRange"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TicketsDto": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/TicketMetadataDto"
+          },
+          "transport_tickets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TicketDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
