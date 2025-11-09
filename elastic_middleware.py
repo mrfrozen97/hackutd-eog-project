@@ -11,11 +11,38 @@ ELASTIC_INDEX = "api_data_index"  # New index name
 # If authentication is needed, add http_auth=("user", "pass")
 es = Elasticsearch(["http://localhost:9200"], http_auth=('elastic', 'W8ErCZGg'),)
 
-# Create index if it doesn't exist
+# Create index with proper mapping based on swagger schema
 def create_index(index_name):
     if not es.indices.exists(index=index_name):
-        es.indices.create(index=index_name)
-        print(f"Created index: {index_name}")
+        # Mapping based on HistoricalDataDto from swagger.json
+        mapping = {
+            "mappings": {
+                "properties": {
+                    "timestamp": {
+                        "type": "date",
+                        "format": "strict_date_time"
+                    },
+                    "cauldron_levels": {
+                        "properties": {
+                            "cauldron_001": {"type": "double"},
+                            "cauldron_002": {"type": "double"},
+                            "cauldron_003": {"type": "double"},
+                            "cauldron_004": {"type": "double"},
+                            "cauldron_005": {"type": "double"},
+                            "cauldron_006": {"type": "double"},
+                            "cauldron_007": {"type": "double"},
+                            "cauldron_008": {"type": "double"},
+                            "cauldron_009": {"type": "double"},
+                            "cauldron_010": {"type": "double"},
+                            "cauldron_011": {"type": "double"},
+                            "cauldron_012": {"type": "double"}
+                        }
+                    }
+                }
+            }
+        }
+        es.indices.create(index=index_name, body=mapping)
+        print(f"Created index: {index_name} with proper mapping")
     else:
         print(f"Index already exists: {index_name}")
 
@@ -46,7 +73,6 @@ def fetch_and_push():
                 if "fields" in data and "timestamp" in data["fields"]:
                     es.index(index=ELASTIC_INDEX, id=data["fields"]["timestamp"], document=data)
                 else:
-                    "NOOTTTT"
                     es.index(index=ELASTIC_INDEX, document=data)
                 print(f"Pushed 1 item at {time.strftime('%Y-%m-%d %H:%M:%S')}")
             else:

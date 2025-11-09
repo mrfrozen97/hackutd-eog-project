@@ -6,6 +6,7 @@ import time
 ELASTIC_HOST = "localhost"
 ELASTIC_PORT = 9200
 ELASTIC_INDEX = "geo_points_index"  # Node index
+MARKET_INDEX = "geo_point_market_index"  # Market index
 EDGE_INDEX = "geo_edges_index"      # Edge index
 API_BASE = "https://hackutd2025.eog.systems"
 
@@ -48,6 +49,7 @@ def create_edge_index(index_name):
         print(f"Edge index already exists: {index_name}")
 
 create_geo_index(ELASTIC_INDEX)
+create_geo_index(MARKET_INDEX)
 create_edge_index(EDGE_INDEX)
 
 # Fetch and index geo points from cauldrons, market, couriers
@@ -76,7 +78,7 @@ def fetch_and_push_geo_points():
                     "type": "market",
                     "id": market.get("id")
                 }
-                es.index(index=ELASTIC_INDEX, id=f"market_{doc['id']}", document=doc)
+                es.index(index=MARKET_INDEX, id=f"market_{doc['id']}", document=doc)
             # Couriers (no geo, but can add if available)
             courier_resp = requests.get(f"{API_BASE}/api/Information/couriers")
             couriers = courier_resp.json()
@@ -95,6 +97,11 @@ def fetch_and_push_geo_points():
             node_lookup = {}
             res = es.search(index=ELASTIC_INDEX, body={"query": {"match_all": {}}}, size=1000)
             for doc in res["hits"]["hits"]:
+                node_lookup[doc["_source"]["id"]] = doc["_source"]["geo"]
+            
+            # Also include market node
+            market_res = es.search(index=MARKET_INDEX, body={"query": {"match_all": {}}}, size=1000)
+            for doc in market_res["hits"]["hits"]:
                 node_lookup[doc["_source"]["id"]] = doc["_source"]["geo"]
 
             # Fetch and index edges
