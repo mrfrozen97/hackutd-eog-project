@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
-from datetime import date, datetime # Added datetime for date parsing
+from datetime import date, datetime
+import itertools  # <-- 1. IMPORT THIS
 
 # --- Import our custom analyzer tools from the other file ---
 from slope_analyzer import SlopeAnalyzer, get_negative_intervals_ending_on
@@ -11,17 +12,13 @@ from slope_analyzer import SlopeAnalyzer, get_negative_intervals_ending_on
 BASE_URL = "https://hackutd2025.eog.systems"
 
 # --- You can change these ---
-# Define the date range to analyze
 START_DATE = "2025-10-30"
 END_DATE = "2025-11-09" # Inclusive
-
-# How close does the volume need to be to count as a match? (e.g., +/- 1.5 Liters)
-VOLUME_TOLERANCE = 1.5
+VOLUME_TOLERANCE = 1.5 # +/- 1.5 Liters
 # ----------------------------
 
 # -----------------------------------------------------------
 # 2. FETCH ALL COMMON DATA (Cauldrons, Tickets, Levels)
-#    We fetch these once to avoid calling the API in a loop.
 # -----------------------------------------------------------
 print("Fetching all required data one time...")
 
@@ -45,16 +42,13 @@ except Exception as e:
 
 # Fetch All Cauldron Level Data
 try:
-    # Fetch all data in one go
     level_data = requests.get(f"{BASE_URL}/api/Data?start_date=0&end_date=1762645088").json()
-    
     rows = []
     for entry in level_data:
         timestamp = entry["timestamp"]
         for cid, level in entry["cauldron_levels"].items():
             rows.append([timestamp, cid, level])
 
-    # Load all level data into one big DataFrame
     df_all_levels = pd.DataFrame(rows, columns=["timestamp", "cauldron_id", "level"])
     df_all_levels['timestamp'] = pd.to_datetime(df_all_levels['timestamp'])
     df_all_levels = df_all_levels.sort_values(by="timestamp")
@@ -67,10 +61,8 @@ except Exception as e:
 
 # -----------------------------------------------------------
 # 3. MAIN ANALYSIS LOOP
-#    Loop through each DATE, then each CAULDRON.
 # -----------------------------------------------------------
 
-# Create a date iterator
 try:
     date_iterator = pd.date_range(start=START_DATE, end=END_DATE, freq='D')
     print(f"Starting analysis for {len(date_iterator)} days ({START_DATE} to {END_DATE})\n")
@@ -78,12 +70,10 @@ except ValueError as e:
     print(f"Error with date range: {e}. Check START_DATE and END_DATE formats.")
     exit()
 
-
 total_matches_found = 0
 
 # --- OUTER LOOP: Iterate over each date ---
 for current_date_dt in date_iterator:
-    # Convert pandas timestamp to a simple datetime.date object
     current_date = current_date_dt.date()
     
     print(f"==================================================")
@@ -94,21 +84,23 @@ for current_date_dt in date_iterator:
     for cauldron_id in all_cauldron_ids:
         
         # --- Step 3a: Find Drain Events ---
-        
-        # Filter the big DataFrame for only this cauldron
-        # We use the full df_all_levels, not a pre-filtered one
         df_cauldron = df_all_levels[df_all_levels["cauldron_id"] == cauldron_id]
 
         if df_cauldron.empty:
-            # This is common, so we don't print anything to reduce noise
             continue
 
         # Run the analysis
         an = SlopeAnalyzer(df_cauldron["timestamp"], df_cauldron["level"], epsilon=20)
         all_inflection_points = an.inflection_points()
 
-        # Find the specific drain events for our *current date in the loop*
-        drain_events = get_negative_intervals_ending_on(all_inflection_points, current_date, an)
+        # --- !! BUG FIX !! ---
+        # Pass the growth rate, not the 'an' object
+        avg_growth_rate = an.average_positive_slope()
+        drain_events = get_negative_intervals_ending_on(
+            all_inflection_points, 
+            current_date, 
+            avg_growth_rate
+        )
 
         # --- Step 3b: Find Relevant Tickets ---
         date_str = current_date.strftime('%Y-%m-%d')
@@ -118,7 +110,6 @@ for current_date_dt in date_iterator:
                 relevant_tickets.append(ticket)
 
         # --- Step 3c: Skip if no activity ---
-        # If there are no drains AND no tickets, skip this cauldron for this day
         if not drain_events and not relevant_tickets:
             continue
             
@@ -126,21 +117,22 @@ for current_date_dt in date_iterator:
         print(f"--- Analyzing: {cauldron_id} ---")
         print(f"Found {len(drain_events)} drain event(s) and {len(relevant_tickets)} ticket(s).")
         
-        unmatched_tickets = list(relevant_tickets) # Copy the list for tracking
+        unmatched_tickets = list(relevant_tickets) # Full list of tickets to be matched
+        unmatched_drains = [] # Drains left over after Phase 1
         cauldron_match_count = 0
+        
+        print("\n  Phase 1: Attempting 1-to-1 matching...")
 
-        # Loop through each DRAIN event...
+        # --- PHASE 1: 1-to-1 Matching ---
         for event in drain_events:
             event_volume = event['drain_volume']
             found_match = False
             
-            # ...and compare it to each relevant TICKET
             for ticket in unmatched_tickets:
                 ticket_volume = ticket['amount_collected']
                 
                 if abs(event_volume - ticket_volume) <= VOLUME_TOLERANCE:
-                    
-                    print("  ✅ MATCH FOUND!")
+                    print("  ✅ [Phase 1] MATCH FOUND!")
                     print(f"    [Drain Event] Volume: {event_volume:.2f} L (Ended: {event['end_point'][0]})")
                     print(f"    [Ticket]      Volume: {ticket_volume:.2f} L (ID: {ticket['ticket_id']})")
                     
@@ -150,17 +142,61 @@ for current_date_dt in date_iterator:
                     break 
             
             if not found_match:
-                print(f"  ❌ NO MATCH for Drain Event (Volume: {event_volume:.2f} L)")
-        
-        # Print any leftover tickets
+                unmatched_drains.append(event) # Add to list for Phase 2
+
+        print(f"  Phase 1 Complete: {cauldron_match_count} match(es) found.")
+
+        # --- PHASE 2: Many-to-One (Sum) Matching ---
+        final_unmatched_drains = [] # Drains left over after Phase 2
+        if unmatched_drains and unmatched_tickets:
+            print("\n  Phase 2: Attempting to match remaining drains by summing tickets...")
+            
+            # Sort drains largest-first to match big ones first
+            for event in sorted(unmatched_drains, key=lambda x: x['drain_volume'], reverse=True):
+                event_volume = event['drain_volume']
+                found_combo_match = False
+                
+                # Try combinations from 2 tickets up to all remaining tickets
+                for r in range(2, len(unmatched_tickets) + 1):
+                    for combo in itertools.combinations(unmatched_tickets, r):
+                        combo_sum = sum(ticket['amount_collected'] for ticket in combo)
+                        
+                        if abs(event_volume - combo_sum) <= VOLUME_TOLERANCE:
+                            print("  ✅ [Phase 2] MATCH FOUND (Sum of tickets)")
+                            print(f"    [Drain Event] Volume: {event_volume:.2f} L")
+                            print(f"    [Tickets Used] Sum: {combo_sum:.2f} L from {len(combo)} tickets:")
+                            
+                            tickets_in_combo = []
+                            for ticket in combo:
+                                print(f"      - ID: {ticket['ticket_id']}, Vol: {ticket['amount_collected']:.2f} L")
+                                tickets_in_combo.append(ticket)
+                            
+                            # Rebuild the unmatched_tickets list, removing the ones we used
+                            unmatched_tickets = [t for t in unmatched_tickets if t not in tickets_in_combo]
+                            
+                            found_combo_match = True
+                            cauldron_match_count += 1
+                            break # Stop checking combos
+                    if found_combo_match:
+                        break # Stop checking combo sizes (e.g., stop checking r=3 if r=2 worked)
+
+                if not found_combo_match:
+                    final_unmatched_drains.append(event) # This drain is truly unmatched
+        else:
+            final_unmatched_drains = list(unmatched_drains) # No tickets left, all drains are unmatched
+
+        # --- FINAL REPORT for this cauldron/day ---
+        if final_unmatched_drains:
+            print("\n  ❌ Unmatched Drain Events (No match found in Phase 1 or 2):")
+            for event in final_unmatched_drains:
+                print(f"    - Drain Event, Volume: {event['drain_volume']:.2f} L (Ended: {event['end_point'][0]})")
+
         if unmatched_tickets:
             print("\n  ⚠️ Unmatched Tickets (No drain event found):")
             for ticket in unmatched_tickets:
                 print(f"    - Ticket ID: {ticket['ticket_id']}, Volume: {ticket['amount_collected']:.2f} L")
         
-        if cauldron_match_count > 0:
-             print(f"  Summary: {cauldron_match_count} match(es) found for {cauldron_id} on this day.")
-
+        print(f"\n  Summary: {cauldron_match_count} total match(es) found for {cauldron_id} on this day.")
         print("--------------------------------" + "-"*len(cauldron_id))
         total_matches_found += cauldron_match_count
 

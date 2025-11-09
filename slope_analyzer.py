@@ -57,7 +57,7 @@ class SlopeAnalyzer:
         return sum(neg)/len(neg) if neg else 0
 
 
-def get_negative_intervals_ending_on(inflection_points, target_date, slopeAnalyzer):
+def get_negative_intervals_ending_on(inflection_points, target_date, avg_growth_rate):
     """
     Finds negative slope intervals that end on a specific calendar date.
     """
@@ -75,7 +75,7 @@ def get_negative_intervals_ending_on(inflection_points, target_date, slopeAnalyz
         
         if is_negative_slope and matches_target_date:
             time_taken = end_time - start_time
-            drain_volume = (start_value - end_value) + time_taken.total_seconds() / 60 * slopeAnalyzer.average_positive_slope()  # in Liters
+            drain_volume = (start_value - end_value) + time_taken.total_seconds() / 60 * avg_growth_rate
             
             found_intervals.append({
                 "interval": (start_time, end_time),
@@ -114,7 +114,6 @@ if __name__ == "__main__":
 
     an = SlopeAnalyzer(df_1["timestamp"], df_1["level"], epsilon=20)
 
-    print("===== Cauldron 001 Slope Summary =====")
     print(f"Average positive slope: {an.average_positive_slope():.3f} L/min")
     print(f"Average negative slope: {an.average_negative_slope():.3f} L/min")
 
@@ -123,7 +122,7 @@ if __name__ == "__main__":
     target_date = date(2025, 10, 30) 
     
     print(f"\n===== Drain Info with Volumes for {target_date} =====")
-    drain_infos = get_negative_intervals_ending_on(an.inflection_points(), target_date, an)
+    drain_infos = get_negative_intervals_ending_on(an.inflection_points(), target_date, an.average_positive_slope())
     
     if not drain_infos:
         print("No drain events found for this date.")
