@@ -107,6 +107,9 @@ print(f"Average negative slope: {an.average_negative_slope():.3f} L/min")
 
 print(an.inflection_points())
 
+from datetime import date
+target_date = date(2025, 11, 6)
+
 def get_negative_intervals_ending_on(inflection_points, target_date):
     """
     Finds negative slope intervals that end on a specific calendar date.
