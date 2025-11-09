@@ -290,7 +290,7 @@ def simulate_n_witches(n):
 
 def find_min():
     """Find minimum number of witches needed (minimum 3)"""
-    for n in range(3, 13):  # Start from 3 witches minimum
+    for n in range(3, 100):  # Start from 3 witches minimum
         ok, routes, vols, delivered, schedules = simulate_n_witches(n)
         if ok:
             return n, routes, vols, delivered, schedules
