@@ -3,13 +3,13 @@ import requests
 from elasticsearch import Elasticsearch
 
 # === CONFIGURATION ===
-API_URL = "https://hackutd2025.eog.systems/api/Data"  # Replace with your API endpoint
+API_URL = "https://hackutd2025.eog.systems/api/Data"  # Base endpoint; params added dynamically
 ELASTIC_HOST = "localhost"
 ELASTIC_PORT = 9200
 ELASTIC_INDEX = "api_data_index"  # New index name
 
 # If authentication is needed, add http_auth=("user", "pass")
-es = Elasticsearch(["http://localhost:9200"], http_auth=('elastic', 'W8ErCZGg'),)
+es = Elasticsearch(["http://localhost:9200"], http_auth=('elastic', 'nf4caJQE'),)
 
 # Create index with proper mapping based on swagger schema
 def create_index(index_name):
@@ -48,19 +48,28 @@ def create_index(index_name):
 
 create_index(ELASTIC_INDEX)
 
+# Build data URL with required time range parameters.
+# NOTE: Using start_date=0 every minute will re-fetch the entire history and re-index all docs.
+# Consider changing to incremental: keep last_end = previous end_date and advance.
+def build_data_url():
+    current_unix = int(time.time())
+    return f"{API_URL}?start_date=0&end_date={current_unix + (6*60*60)}"
+
 # Main loop: fetch and push every 1 minute
 def fetch_and_push():
     while True:
         try:
-            response = requests.get(API_URL)
+            url = build_data_url()
+            response = requests.get(url)
             response.raise_for_status()
             data = response.json()
+            
             # If data is a list, index each item using 'timestamp' as the document ID
             if isinstance(data, list):
                 pushed = 0
                 for item in data:
                     if isinstance(item, dict) and "timestamp" in item:
-                        es.index(index=ELASTIC_INDEX, id=item["timestamp"], document=item)
+                        es.index(index=ELASTIC_INDEX, id=(item["timestamp"]), document=item)
                         pushed += 1
                     elif isinstance(item, dict):
                         es.index(index=ELASTIC_INDEX, document=item)

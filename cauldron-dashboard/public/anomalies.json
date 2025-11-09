@@ -21,23 +21,6 @@
                     "ticket_id": "TT_20251030_016",
                     "type": "TICKET_ANOMALY"
                 }
-            ],
-            "cauldron_011": [
-                {
-                    "volume": 194.763267208559,
-                    "time": "2025-10-30 13:16:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 96.63,
-                    "ticket_id": "TT_20251030_014",
-                    "type": "TICKET_ANOMALY"
-                },
-                {
-                    "volume": 96.63,
-                    "ticket_id": "TT_20251030_015",
-                    "type": "TICKET_ANOMALY"
-                }
             ]
         },
         "2025-10-31": {
@@ -99,18 +82,6 @@
                     "type": "DRAIN_ANOMALY"
                 }
             ],
-            "cauldron_007": [
-                {
-                    "volume": 99.16783287447792,
-                    "time": "2025-11-01 21:40:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 97.51,
-                    "ticket_id": "TT_20251101_020",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
             "cauldron_008": [
                 {
                     "volume": 19.79,
@@ -165,18 +136,6 @@
                     "type": "TICKET_ANOMALY"
                 }
             ],
-            "cauldron_007": [
-                {
-                    "volume": 99.17656585432218,
-                    "time": "2025-11-02 14:32:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 97.51,
-                    "ticket_id": "TT_20251102_044",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
             "cauldron_009": [
                 {
                     "volume": 101.01760812620608,
@@ -210,35 +169,11 @@
             ]
         },
         "2025-11-03": {
-            "cauldron_001": [
-                {
-                    "volume": 97.80617287113974,
-                    "time": "2025-11-03 11:01:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 95.8,
-                    "ticket_id": "TT_20251103_035",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
             "cauldron_002": [
                 {
                     "volume": 94.48455912715606,
                     "time": "2025-11-03 00:55:00",
                     "type": "DRAIN_ANOMALY"
-                }
-            ],
-            "cauldron_003": [
-                {
-                    "volume": 98.79071099331358,
-                    "time": "2025-11-03 22:29:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 97.05,
-                    "ticket_id": "TT_20251103_046",
-                    "type": "TICKET_ANOMALY"
                 }
             ],
             "cauldron_004": [
@@ -263,18 +198,6 @@
                     "volume": 51.44692622943469,
                     "time": "2025-11-03 19:42:00",
                     "type": "DRAIN_ANOMALY"
-                }
-            ],
-            "cauldron_007": [
-                {
-                    "volume": 99.63219936440014,
-                    "time": "2025-11-03 10:16:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 97.51,
-                    "ticket_id": "TT_20251103_064",
-                    "type": "TICKET_ANOMALY"
                 }
             ],
             "cauldron_008": [
@@ -340,35 +263,8 @@
             ],
             "cauldron_009": [
                 {
-                    "volume": 204.62234748731103,
-                    "time": "2025-11-04 13:10:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 99.87,
-                    "ticket_id": "TT_20251104_068",
-                    "type": "TICKET_ANOMALY"
-                },
-                {
-                    "volume": 99.87,
-                    "ticket_id": "TT_20251104_075",
-                    "type": "TICKET_ANOMALY"
-                },
-                {
                     "volume": 99.87,
                     "ticket_id": "TT_20251104_077",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
-            "cauldron_010": [
-                {
-                    "volume": 97.66395634646116,
-                    "time": "2025-11-04 03:24:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 95.85,
-                    "ticket_id": "TT_20251104_047",
                     "type": "TICKET_ANOMALY"
                 }
             ],
@@ -381,18 +277,6 @@
             ]
         },
         "2025-11-05": {
-            "cauldron_001": [
-                {
-                    "volume": 97.40717424128415,
-                    "time": "2025-11-05 22:30:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 95.8,
-                    "ticket_id": "TT_20251105_073",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
             "cauldron_002": [
                 {
                     "volume": 94.82,
@@ -420,18 +304,6 @@
                     "time": "2025-11-05 00:17:00",
                     "type": "DRAIN_ANOMALY"
                 }
-            ],
-            "cauldron_010": [
-                {
-                    "volume": 97.74073448887441,
-                    "time": "2025-11-05 17:40:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 95.85,
-                    "ticket_id": "TT_20251105_072",
-                    "type": "TICKET_ANOMALY"
-                }
             ]
         },
         "2025-11-06": {
@@ -446,18 +318,6 @@
                 {
                     "volume": 83.63,
                     "ticket_id": "TT_20251106_086",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
-            "cauldron_007": [
-                {
-                    "volume": 99.49163393494496,
-                    "time": "2025-11-06 05:40:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 97.51,
-                    "ticket_id": "TT_20251106_091",
                     "type": "TICKET_ANOMALY"
                 }
             ],
@@ -527,34 +387,10 @@
                     "type": "TICKET_ANOMALY"
                 }
             ],
-            "cauldron_010": [
-                {
-                    "volume": 98.62140334335426,
-                    "time": "2025-11-07 19:53:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 95.85,
-                    "ticket_id": "TT_20251107_099",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
             "cauldron_011": [
                 {
                     "volume": 96.63,
                     "ticket_id": "TT_20251107_117",
-                    "type": "TICKET_ANOMALY"
-                }
-            ],
-            "cauldron_012": [
-                {
-                    "volume": 96.07304860419416,
-                    "time": "2025-11-07 15:32:00",
-                    "type": "DRAIN_ANOMALY"
-                },
-                {
-                    "volume": 94.37,
-                    "ticket_id": "TT_20251107_098",
                     "type": "TICKET_ANOMALY"
                 }
             ]
@@ -848,6 +684,18 @@
                     "ticket_sum": 96.63,
                     "cauldron_id": "cauldron_011",
                     "date": "2025-10-30"
+                },
+                {
+                    "type": "Many-to-One",
+                    "drain_volume": 194.763267208559,
+                    "drain_end_time": "2025-10-30 13:16:00",
+                    "ticket_ids": [
+                        "TT_20251030_014",
+                        "TT_20251030_015"
+                    ],
+                    "ticket_sum": 193.26,
+                    "cauldron_id": "cauldron_011",
+                    "date": "2025-10-30"
                 }
             ],
             "cauldron_012": [
@@ -997,6 +845,19 @@
                     "date": "2025-11-01"
                 }
             ],
+            "cauldron_007": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 99.16783287447792,
+                    "drain_end_time": "2025-11-01 21:40:00",
+                    "ticket_ids": [
+                        "TT_20251101_020"
+                    ],
+                    "ticket_sum": 97.51,
+                    "cauldron_id": "cauldron_007",
+                    "date": "2025-11-01"
+                }
+            ],
             "cauldron_008": [
                 {
                     "type": "Many-to-One",
@@ -1066,6 +927,19 @@
                     "date": "2025-11-02"
                 }
             ],
+            "cauldron_007": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 99.17656585432218,
+                    "drain_end_time": "2025-11-02 14:32:00",
+                    "ticket_ids": [
+                        "TT_20251102_044"
+                    ],
+                    "ticket_sum": 97.51,
+                    "cauldron_id": "cauldron_007",
+                    "date": "2025-11-02"
+                }
+            ],
             "cauldron_008": [
                 {
                     "type": "1-to-1",
@@ -1119,6 +993,32 @@
             ]
         },
         "2025-11-03": {
+            "cauldron_001": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 97.80617287113974,
+                    "drain_end_time": "2025-11-03 11:01:00",
+                    "ticket_ids": [
+                        "TT_20251103_035"
+                    ],
+                    "ticket_sum": 95.8,
+                    "cauldron_id": "cauldron_001",
+                    "date": "2025-11-03"
+                }
+            ],
+            "cauldron_003": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 98.79071099331358,
+                    "drain_end_time": "2025-11-03 22:29:00",
+                    "ticket_ids": [
+                        "TT_20251103_046"
+                    ],
+                    "ticket_sum": 97.05,
+                    "cauldron_id": "cauldron_003",
+                    "date": "2025-11-03"
+                }
+            ],
             "cauldron_006": [
                 {
                     "type": "1-to-1",
@@ -1135,10 +1035,21 @@
             "cauldron_007": [
                 {
                     "type": "1-to-1",
+                    "drain_volume": 99.63219936440014,
+                    "drain_end_time": "2025-11-03 10:16:00",
+                    "ticket_ids": [
+                        "TT_20251103_053"
+                    ],
+                    "ticket_sum": 97.51,
+                    "cauldron_id": "cauldron_007",
+                    "date": "2025-11-03"
+                },
+                {
+                    "type": "1-to-1",
                     "drain_volume": 98.75966532408879,
                     "drain_end_time": "2025-11-03 23:06:00",
                     "ticket_ids": [
-                        "TT_20251103_053"
+                        "TT_20251103_064"
                     ],
                     "ticket_sum": 97.51,
                     "cauldron_id": "cauldron_007",
@@ -1247,6 +1158,33 @@
                     "date": "2025-11-04"
                 }
             ],
+            "cauldron_009": [
+                {
+                    "type": "Many-to-One",
+                    "drain_volume": 204.62234748731103,
+                    "drain_end_time": "2025-11-04 13:10:00",
+                    "ticket_ids": [
+                        "TT_20251104_068",
+                        "TT_20251104_075"
+                    ],
+                    "ticket_sum": 199.74,
+                    "cauldron_id": "cauldron_009",
+                    "date": "2025-11-04"
+                }
+            ],
+            "cauldron_010": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 97.66395634646116,
+                    "drain_end_time": "2025-11-04 03:24:00",
+                    "ticket_ids": [
+                        "TT_20251104_047"
+                    ],
+                    "ticket_sum": 95.85,
+                    "cauldron_id": "cauldron_010",
+                    "date": "2025-11-04"
+                }
+            ],
             "cauldron_012": [
                 {
                     "type": "1-to-1",
@@ -1262,6 +1200,19 @@
             ]
         },
         "2025-11-05": {
+            "cauldron_001": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 97.40717424128415,
+                    "drain_end_time": "2025-11-05 22:30:00",
+                    "ticket_ids": [
+                        "TT_20251105_073"
+                    ],
+                    "ticket_sum": 95.8,
+                    "cauldron_id": "cauldron_001",
+                    "date": "2025-11-05"
+                }
+            ],
             "cauldron_002": [
                 {
                     "type": "1-to-1",
@@ -1339,6 +1290,19 @@
                     "date": "2025-11-05"
                 }
             ],
+            "cauldron_010": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 97.74073448887441,
+                    "drain_end_time": "2025-11-05 17:40:00",
+                    "ticket_ids": [
+                        "TT_20251105_072"
+                    ],
+                    "ticket_sum": 95.85,
+                    "cauldron_id": "cauldron_010",
+                    "date": "2025-11-05"
+                }
+            ],
             "cauldron_011": [
                 {
                     "type": "1-to-1",
@@ -1401,6 +1365,19 @@
                     ],
                     "ticket_sum": 94.41,
                     "cauldron_id": "cauldron_006",
+                    "date": "2025-11-06"
+                }
+            ],
+            "cauldron_007": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 99.49163393494496,
+                    "drain_end_time": "2025-11-06 05:40:00",
+                    "ticket_ids": [
+                        "TT_20251106_091"
+                    ],
+                    "ticket_sum": 97.51,
+                    "cauldron_id": "cauldron_007",
                     "date": "2025-11-06"
                 }
             ],
@@ -1582,6 +1559,19 @@
                     "date": "2025-11-07"
                 }
             ],
+            "cauldron_010": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 98.62140334335426,
+                    "drain_end_time": "2025-11-07 19:53:00",
+                    "ticket_ids": [
+                        "TT_20251107_099"
+                    ],
+                    "ticket_sum": 95.85,
+                    "cauldron_id": "cauldron_010",
+                    "date": "2025-11-07"
+                }
+            ],
             "cauldron_011": [
                 {
                     "type": "1-to-1",
@@ -1592,6 +1582,19 @@
                     ],
                     "ticket_sum": 96.63,
                     "cauldron_id": "cauldron_011",
+                    "date": "2025-11-07"
+                }
+            ],
+            "cauldron_012": [
+                {
+                    "type": "1-to-1",
+                    "drain_volume": 96.07304860419416,
+                    "drain_end_time": "2025-11-07 15:32:00",
+                    "ticket_ids": [
+                        "TT_20251107_098"
+                    ],
+                    "ticket_sum": 94.37,
+                    "cauldron_id": "cauldron_012",
                     "date": "2025-11-07"
                 }
             ]
@@ -1696,6 +1699,6 @@
     "metadata": {
         "start_date": "2025-10-30",
         "end_date": "2025-11-11",
-        "volume_tolerance": 1.5
+        "volume_tolerance": 5
     }
 }

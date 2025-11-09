@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
 import requests
 import time
+from datetime import datetime, timezone
 
 # === CONFIGURATION ===
 ELASTIC_HOST = "localhost"
@@ -9,8 +10,13 @@ ELASTIC_INDEX = "geo_points_index"  # Node index
 MARKET_INDEX = "geo_point_market_index"  # Market index
 EDGE_INDEX = "geo_edges_index"      # Edge index
 API_BASE = "https://hackutd2025.eog.systems"
+API_URL_DATA = "https://hackutd2025.eog.systems/api/Data" 
+es = Elasticsearch([f"http://{ELASTIC_HOST}:{ELASTIC_PORT}"], http_auth=('elastic', 'nf4caJQE'))
 
-es = Elasticsearch([f"http://{ELASTIC_HOST}:{ELASTIC_PORT}"], http_auth=('elastic', 'W8ErCZGg'))
+
+def build_data_url():
+    current_unix = int(time.time())
+    return f"{API_URL_DATA}?start_date=0&end_date={current_unix}"
 
 # Create index with geo_point mapping for nodes
 def create_geo_index(index_name):
@@ -21,7 +27,8 @@ def create_geo_index(index_name):
                     "geo": {"type": "geo_point"},
                     "name": {"type": "keyword"},
                     "type": {"type": "keyword"},
-                    "id": {"type": "keyword"}
+                    "id": {"type": "keyword"},
+                    "value": {"type": "double"}
                 }
             }
         }
@@ -56,16 +63,46 @@ create_edge_index(EDGE_INDEX)
 def fetch_and_push_geo_points():
     while True:
         try:
+            url_data = build_data_url()
+            data_response = requests.get(url_data)
+            data_response.raise_for_status()
+            data_col = data_response.json()
+
+            # Sort data_col (list of dicts) by 'timestamp'
+            if isinstance(data_col, list):
+                def _ts_sort_key(item):
+                    ts = item.get("timestamp")
+                    if isinstance(ts, str):
+                        t = ts.replace('Z', '+00:00') if ts.endswith('Z') else ts
+                        try:
+                            dt = datetime.fromisoformat(t)
+                            if dt.tzinfo is None:
+                                dt = dt.replace(tzinfo=timezone.cst)
+                            return (0, dt)
+                        except Exception:
+                            # Fallback to string compare
+                            return (1, ts)
+                    # Handle non-string or missing timestamps last
+                    return (2, str(ts) if ts is not None else '')
+
+                data_col.sort(key=_ts_sort_key)
+
+
+            
             # Cauldrons
             cauldron_resp = requests.get(f"{API_BASE}/api/Information/cauldrons")
             cauldrons = cauldron_resp.json()
+        
+
             for c in cauldrons:
+                print("asjhdajs", data_col[-1]['timestamp'], data_col[-1]['cauldron_levels'][c.get("id")])
                 if "latitude" in c and "longitude" in c:
                     doc = {
                         "geo": {"lat": c["latitude"], "lon": c["longitude"]},
                         "name": c.get("name", c.get("id", "cauldron")),
                         "type": "cauldron",
-                        "id": c.get("id")
+                        "id": c.get("id"),
+                        "value": data_col[-1]['cauldron_levels'][c.get("id")]
                     }
                     es.index(index=ELASTIC_INDEX, id=f"cauldron_{doc['id']}", document=doc)
             # Market
@@ -93,6 +130,7 @@ def fetch_and_push_geo_points():
                     es.index(index=ELASTIC_INDEX, id=f"courier_{doc['id']}", document=doc)
             print(f"Geo points indexed at {time.strftime('%Y-%m-%d %H:%M:%S')}")
 
+            
             # Build node lookup for geo coordinates
             node_lookup = {}
             res = es.search(index=ELASTIC_INDEX, body={"query": {"match_all": {}}}, size=1000)

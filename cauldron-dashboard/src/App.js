@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { processData } from './utils/dataProcessor';
 import CauldronDashboard from './components/CauldronDashboard';
 import CauldronDetail from './components/CauldronDetail';
+import EmbeddedFrame from './components/EmbeddedFrame';
 import './App.css';
 
 // --- (NEW) IMPORT YOUR IMAGES ---
@@ -20,6 +21,7 @@ function App() {
   const [endDate, setEndDate] = useState('');
 
   const BASE_URL = "/api"; 
+  const EMBED_URL = process.env.REACT_APP_EMBED_URL || '';
 
   // ... (your useEffect is unchanged) ...
   useEffect(() => {
@@ -96,6 +98,17 @@ function App() {
       {/* --- (END MODIFICATION) --- */}
       
       <main>
+        {(
+          <section style={{ marginTop: 40, marginBottom: 24 }}>
+            <h2>Potion Network</h2>
+            <EmbeddedFrame
+              src={EMBED_URL}
+              title="Embedded Analytics"
+              height={1200}
+              style={{ width: 1400, margin: '0 auto' }}
+            />
+          </section>
+        )}
         {selectedCauldronData ? (
           // ... (rest of your app is unchanged) ...
           <CauldronDetail 
@@ -114,6 +127,9 @@ function App() {
             maxDate={allAnomaliesData.metadata.end_date}
           />
         )}
+
+        {/* Optional embedded analytics or external page */}
+        
       </main>
     </div>
   );

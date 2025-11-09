@@ -12,7 +12,7 @@ from slope_analyzer import SlopeAnalyzer, get_negative_intervals_ending_on
 # 1. SETUP: Define global settings
 # -----------------------------------------------------------
 BASE_URL = "https://hackutd2025.eog.systems"
-VOLUME_TOLERANCE = 1.5 # +/- 1.5 Liters
+VOLUME_TOLERANCE = 5 # +/- 1.5 Liters
 #
 # --- START_DATE and END_DATE are now fetched in Section 2 ---
 #
