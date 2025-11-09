@@ -5,6 +5,7 @@ import { processData } from './utils/dataProcessor';
 import CauldronDashboard from './components/CauldronDashboard';
 import CauldronDetail from './components/CauldronDetail';
 import EmbeddedFrame from './components/EmbeddedFrame';
+import WitchAnimation from './components/WitchAnimation';
 import './App.css';
 
 // --- (NEW) IMPORT YOUR IMAGES ---
@@ -128,7 +129,10 @@ function App() {
           />
         )}
 
-        {/* Optional embedded analytics or external page */}
+        {/* Witch Route Optimization Animation */}
+        <section style={{ marginTop: 40, marginBottom: 40 }}>
+          <WitchAnimation />
+        </section>
         
       </main>
     </div>

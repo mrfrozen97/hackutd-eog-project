@@ -1,0 +1,154 @@
+{
+    "cauldron_001": [
+        {
+            "to": "market_001",
+            "cost": "00:45:00"
+        },
+        {
+            "to": "cauldron_002",
+            "cost": "00:22:00"
+        }
+    ],
+    "cauldron_002": [
+        {
+            "to": "market_001",
+            "cost": "00:40:00"
+        },
+        {
+            "to": "cauldron_001",
+            "cost": "00:22:00"
+        },
+        {
+            "to": "cauldron_004",
+            "cost": "00:25:00"
+        }
+    ],
+    "cauldron_003": [
+        {
+            "to": "market_001",
+            "cost": "00:55:00"
+        },
+        {
+            "to": "cauldron_005",
+            "cost": "00:30:00"
+        }
+    ],
+    "cauldron_004": [
+        {
+            "to": "market_001",
+            "cost": "00:32:00"
+        },
+        {
+            "to": "cauldron_002",
+            "cost": "00:25:00"
+        },
+        {
+            "to": "cauldron_006",
+            "cost": "00:18:00"
+        }
+    ],
+    "cauldron_005": [
+        {
+            "to": "market_001",
+            "cost": "01:02:00"
+        },
+        {
+            "to": "cauldron_003",
+            "cost": "00:30:00"
+        },
+        {
+            "to": "cauldron_007",
+            "cost": "00:28:00"
+        }
+    ],
+    "cauldron_006": [
+        {
+            "to": "market_001",
+            "cost": "00:28:00"
+        },
+        {
+            "to": "cauldron_004",
+            "cost": "00:18:00"
+        },
+        {
+            "to": "cauldron_008",
+            "cost": "00:15:00"
+        }
+    ],
+    "cauldron_007": [
+        {
+            "to": "market_001",
+            "cost": "01:10:00"
+        },
+        {
+            "to": "cauldron_005",
+            "cost": "00:28:00"
+        },
+        {
+            "to": "cauldron_009",
+            "cost": "00:32:00"
+        }
+    ],
+    "cauldron_008": [
+        {
+            "to": "market_001",
+            "cost": "00:22:00"
+        },
+        {
+            "to": "cauldron_006",
+            "cost": "00:15:00"
+        },
+        {
+            "to": "cauldron_010",
+            "cost": "00:12:00"
+        }
+    ],
+    "cauldron_009": [
+        {
+            "to": "market_001",
+            "cost": "01:20:00"
+        },
+        {
+            "to": "cauldron_007",
+            "cost": "00:32:00"
+        },
+        {
+            "to": "cauldron_011",
+            "cost": "00:20:00"
+        }
+    ],
+    "cauldron_010": [
+        {
+            "to": "market_001",
+            "cost": "00:20:00"
+        },
+        {
+            "to": "cauldron_008",
+            "cost": "00:12:00"
+        },
+        {
+            "to": "cauldron_012",
+            "cost": "00:10:00"
+        }
+    ],
+    "cauldron_011": [
+        {
+            "to": "market_001",
+            "cost": "01:30:00"
+        },
+        {
+            "to": "cauldron_009",
+            "cost": "00:20:00"
+        }
+    ],
+    "cauldron_012": [
+        {
+            "to": "market_001",
+            "cost": "00:15:00"
+        },
+        {
+            "to": "cauldron_010",
+            "cost": "00:10:00"
+        }
+    ]
+}

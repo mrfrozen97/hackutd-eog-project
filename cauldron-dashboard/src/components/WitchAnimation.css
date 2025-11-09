@@ -1,0 +1,251 @@
+.witch-animation-container {
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.witch-animation-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.map-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.animation-map {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.info-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #2c2c2c 0%, #3a3a3a 100%);
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 2px solid #9b59b6;
+  box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+  z-index: 1000;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #fff;
+}
+
+.info-panel div {
+  margin: 5px 0;
+}
+
+.info-panel strong {
+  margin-right: 8px;
+  color: #9b59b6;
+  font-weight: 700;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.control-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid #333;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: #333;
+  color: white;
+}
+
+.control-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.control-btn.play-pause {
+  background: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.control-btn.play-pause:hover {
+  background: #45a049;
+  border-color: #45a049;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 15px;
+  background: #2c2c2c;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+.error-help {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.error-help code {
+  display: block;
+  margin-top: 10px;
+  padding: 10px;
+  background: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.market-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Leaflet popup customization */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 10px;
+  font-size: 13px;
+}
+
+/* Schedule Section */
+.schedule-section {
+  margin-top: 40px;
+  background: #2c2c2c;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-section h3 {
+  color: #9b59b6;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.witch-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.witch-tab {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.witch-tab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.witch-tab.active {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.schedule-content {
+  background: #3a3a3a;
+  border-radius: 8px;
+  padding: 20px;
+  border: 2px solid #9b59b6;
+}
+
+.path-display {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 2;
+  color: #fff;
+}
+
+.location-node {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #2c2c2c;
+  border: 2px solid #9b59b6;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #9b59b6;
+  transition: all 0.2s;
+}
+
+.location-node:hover {
+  background: #9b59b6;
+  color: white;
+  transform: scale(1.05);
+}
+
+.path-arrow {
+  color: #9b59b6;
+  font-size: 20px;
+  font-weight: bold;
+}

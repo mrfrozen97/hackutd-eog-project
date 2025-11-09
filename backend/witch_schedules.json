@@ -1,0 +1,95 @@
+{
+  "timestamp": "2025-11-09T10:56:34.484722",
+  "n_witches": 3,
+  "total_delivered": 155.94047,
+  "schedules": [
+    {
+      "witch_id": 1,
+      "path": [
+        "market",
+        "c4",
+        "c8",
+        "c5",
+        "market",
+        "c8",
+        "c4",
+        "market",
+        "c8",
+        "c4",
+        "market",
+        "c8",
+        "c5",
+        "market",
+        "c8",
+        "c7"
+      ]
+    },
+    {
+      "witch_id": 2,
+      "path": [
+        "market",
+        "c1",
+        "c12",
+        "c2",
+        "market",
+        "c1",
+        "c12",
+        "market",
+        "c1",
+        "c12",
+        "c1",
+        "c11",
+        "market",
+        "c11",
+        "c2",
+        "market",
+        "c1"
+      ]
+    },
+    {
+      "witch_id": 3,
+      "path": [
+        "market",
+        "c9",
+        "c6",
+        "c10",
+        "c6",
+        "c10",
+        "c6",
+        "c10",
+        "market",
+        "c10",
+        "market",
+        "c3",
+        "market",
+        "c6",
+        "c10",
+        "market",
+        "c10",
+        "c3",
+        "market",
+        "c10",
+        "market"
+      ]
+    }
+  ]
+},
+        "c4",
+        "market",
+        "c10",
+        "market",
+        "c10",
+        "market",
+        "c8",
+        "c4",
+        "market",
+        "c12",
+        "c10",
+        "market",
+        "c4",
+        "c12",
+        "market"
+      ]
+    }
+  ]
+}

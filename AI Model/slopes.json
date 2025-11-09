@@ -1,0 +1,50 @@
+{
+    "cauldron_001": {
+        "fill_rate": 0.0819,
+        "pour_rate": 0.51729
+    },
+    "cauldron_002": {
+        "fill_rate": 0.06201,
+        "pour_rate": 0.492
+    },
+    "cauldron_003": {
+        "fill_rate": 0.08715,
+        "pour_rate": 0.53171
+    },
+    "cauldron_004": {
+        "fill_rate": 0.06305,
+        "pour_rate": 0.4998
+    },
+    "cauldron_005": {
+        "fill_rate": 0.07636,
+        "pour_rate": 0.51135
+    },
+    "cauldron_006": {
+        "fill_rate": 0.05409,
+        "pour_rate": 0.52343
+    },
+    "cauldron_007": {
+        "fill_rate": 0.09563,
+        "pour_rate": 0.53419
+    },
+    "cauldron_008": {
+        "fill_rate": 0.07526,
+        "pour_rate": 0.43122
+    },
+    "cauldron_009": {
+        "fill_rate": 0.18533,
+        "pour_rate": 0.5718
+    },
+    "cauldron_010": {
+        "fill_rate": 0.07678,
+        "pour_rate": 0.52406
+    },
+    "cauldron_011": {
+        "fill_rate": 0.09056,
+        "pour_rate": 0.51781
+    },
+    "cauldron_012": {
+        "fill_rate": 0.06636,
+        "pour_rate": 0.48618
+    }
+}
