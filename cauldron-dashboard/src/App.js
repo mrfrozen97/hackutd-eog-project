@@ -1,33 +1,45 @@
+// src/App.js
+
 import React, { useState, useEffect } from 'react';
 import { processData } from './utils/dataProcessor';
 import CauldronDashboard from './components/CauldronDashboard';
 import CauldronDetail from './components/CauldronDetail';
-import './App.css'; // We'll create this file for styling
+import './App.css';
+
+// --- (NEW) IMPORT YOUR IMAGES ---
+import eogLogo from './assets/eog-logo.png';
+import hackutdBanner from './assets/hackutd-banner.png';
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [processedData, setProcessedData] = useState([]);
-  const [selectedCauldron, setSelectedCauldron] = useState(null);
+  // ... (rest of your state is unchanged) ...
+  const [selectedCauldronId, setSelectedCauldronId] = useState(null);
+  const [allCauldrons, setAllCauldrons] = useState([]);
+  const [allAnomaliesData, setAllAnomaliesData] = useState(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
-  // This is the base URL for your API
-  const BASE_URL = "/api";
+  const BASE_URL = "/api"; 
 
+  // ... (your useEffect is unchanged) ...
   useEffect(() => {
-    // This function runs once on component mount
     async function loadData() {
       try {
-        // 1. Fetch both data sources at the same time
         const [cauldronRes, anomalyRes] = await Promise.all([
-          fetch(`${BASE_URL}/api/Information/cauldrons`),
-          fetch('/anomalies.json') // Fetches from the 'public' folder
+          fetch(`${BASE_URL}/api/Information/cauldrons`), // The corrected double /api/api path
+          fetch('/anomalies.json')
         ]);
-
+        // ... (rest of useEffect is unchanged) ...
         const cauldronsFromApi = await cauldronRes.json();
         const anomaliesData = await anomalyRes.json();
+        
+        setAllCauldrons(cauldronsFromApi);
+        setAllAnomaliesData(anomaliesData);
 
-        // 2. Process the data using our utility
-        const data = processData(anomaliesData, cauldronsFromApi);
-        setProcessedData(data);
+        if (anomaliesData?.metadata) {
+          setStartDate(anomaliesData.metadata.start_date);
+          setEndDate(anomaliesData.metadata.end_date);
+        }
 
       } catch (error) {
         console.error("Failed to load data:", error);
@@ -35,37 +47,71 @@ function App() {
         setLoading(false);
       }
     }
-
     loadData();
-  }, [BASE_URL]); // Empty dependency array means this runs once
+  }, [BASE_URL]);
 
-  // --- Handlers for view switching ---
+  // ... (your handlers are unchanged) ...
   const handleSelectCauldron = (cauldronId) => {
-    const cauldron = processedData.find(c => c.details.id === cauldronId);
-    setSelectedCauldron(cauldron);
+    setSelectedCauldronId(cauldronId);
   };
-
   const handleBack = () => {
-    setSelectedCauldron(null);
+    setSelectedCauldronId(null);
   };
 
-  // --- Render Logic ---
-  if (loading) {
+  // ... (your loading guard is unchanged) ...
+  if (loading || !allAnomaliesData || allCauldrons.length === 0) {
     return <div className="loading">Loading Cauldron Data...</div>;
   }
+  
+  // ... (your data processing is unchanged) ...
+  const processedData = processData(
+    allAnomaliesData, 
+    allCauldrons, 
+    startDate, 
+    endDate
+  );
+  const selectedCauldronData = selectedCauldronId 
+    ? processedData.find(c => c.details.id === selectedCauldronId)
+    : null;
+
 
   return (
     <div className="App">
+      {/* --- (MODIFIED) UPDATE THE HEADER --- */}
       <header>
+        <img 
+          src={hackutdBanner} 
+          alt="HackUTD Banner" 
+          className="header-image"
+          style={{ width: '250px' }} // You can adjust the size
+        />
         <h1>Cauldron Analysis Dashboard</h1>
+        <img 
+          src={eogLogo} 
+          alt="EOG Logo" 
+          className="header-image"
+          style={{ width: '200px' }} // You can adjust the size
+        />
       </header>
+      {/* --- (END MODIFICATION) --- */}
+      
       <main>
-        {selectedCauldron ? (
-          <CauldronDetail cauldron={selectedCauldron} onBack={handleBack} />
+        {selectedCauldronData ? (
+          // ... (rest of your app is unchanged) ...
+          <CauldronDetail 
+            cauldron={selectedCauldronData} 
+            onBack={handleBack} 
+          />
         ) : (
           <CauldronDashboard 
             cauldrons={processedData} 
-            onSelectCauldron={handleSelectCauldron} 
+            onSelectCauldron={handleSelectCauldron}
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+            minDate={allAnomaliesData.metadata.start_date}
+            maxDate={allAnomaliesData.metadata.end_date}
           />
         )}
       </main>

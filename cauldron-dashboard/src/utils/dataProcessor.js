@@ -1,12 +1,11 @@
-/**
- * This function takes the raw API and JSON data and combines them
- * into a single, easy-to-use array.
- */
-export function processData(anomaliesData, cauldronsFromApi) {
-  // 1. Create a lookup map for our processed data
+// src/utils/dataProcessor.js
+
+// 1. Update function signature to accept dates
+export function processData(anomaliesData, cauldronsFromApi, startDate, endDate) {
+  
   const processedMap = new Map();
 
-  // 2. Initialize the map with data from the cauldron API
+  // Initialize all cauldrons
   for (const cauldron of cauldronsFromApi) {
     processedMap.set(cauldron.id, {
       details: cauldron,
@@ -17,23 +16,32 @@ export function processData(anomaliesData, cauldronsFromApi) {
     });
   }
 
-  // 3. Loop through all ANOMALIES and add them to the correct cauldron
+  // Loop through all ANOMALIES
   for (const [date, cauldrons] of Object.entries(anomaliesData.anomalies)) {
+    // --- 2. ADDED FILTER LOGIC ---
+    if (date < startDate || date > endDate) {
+      continue; // Skip this date
+    }
+    // --- END ADDED LOGIC ---
+
     for (const [cauldronId, anomalies] of Object.entries(cauldrons)) {
       if (processedMap.has(cauldronId)) {
         const data = processedMap.get(cauldronId);
-        
-        // Add the date to each anomaly for context
         const datedAnomalies = anomalies.map(a => ({ ...a, date }));
-
         data.allAnomalies.push(...datedAnomalies);
         data.anomalyCount += anomalies.length;
       }
     }
   }
 
-  // 4. Loop through all MATCHES and add them to the correct cauldron
+  // Loop through all MATCHES
   for (const [date, cauldrons] of Object.entries(anomaliesData.matches)) {
+    // --- 3. ADDED FILTER LOGIC ---
+    if (date < startDate || date > endDate) {
+      continue; // Skip this date
+    }
+    // --- END ADDED LOGIC ---
+    
     for (const [cauldronId, matches] of Object.entries(cauldrons)) {
       if (processedMap.has(cauldronId)) {
         const data = processedMap.get(cauldronId);
@@ -43,6 +51,5 @@ export function processData(anomaliesData, cauldronsFromApi) {
     }
   }
 
-  // 5. Return the processed data as a single array
   return Array.from(processedMap.values());
 }

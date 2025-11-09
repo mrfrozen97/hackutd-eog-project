@@ -1,11 +1,5 @@
-/* ==============================================
-    Spooky Witch Theme (Dark Mode)
-    Black: #1a1a1a (Main Background)
-    Grey: #2a2a2a (Card/Surface Background)
-    Toxic Green: #00ff00 (Matches & Accents)
-    Purple: #9b59b6 (Headings & Secondary Accents)
-  ==============================================
-*/
+
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
 :root {
   --bg-main: #1a1a1a;
@@ -38,7 +32,9 @@ body {
 header h1 {
   text-align: center;
   margin-bottom: 2rem;
-  color: var(--accent-purple); /* <-- Purple Title */
+  color: gold;/* <-- Purple Title */
+  font-family: 'MedievalSharp', cursive;
+  font-size: 3.5rem;
   font-weight: 600;
 }
 
@@ -202,3 +198,92 @@ header h1 {
 .list-item.anomaly.drain { border-left: 4px solid var(--accent-red); }
 .list-item.anomaly.ticket { border-left: 4px solid var(--accent-yellow); }
 .list-item.match { border-left: 4px solid var(--accent-green); }
+
+/* Add these styles to the end of src/App.css */
+
+.filter-bar {
+  background-color: var(--bg-surface);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  border: 1px solid var(--border-color);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.filter-group input[type="date"] {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Style for the date picker icon in dark mode */
+.filter-group input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+/* 1. Define the floating animation */
+@keyframes float {
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-8px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+/* 2. Update the header to use flexbox */
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--accent-purple);
+  
+  /* New styles for layout */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+header h1 {
+  margin-bottom: 0; /* Remove default margin */
+}
+
+/* 3. Style and animate the new images */
+.header-image {
+  height: auto; /* Maintain aspect ratio */
+  
+  /* Apply the animation! */
+  animation: float 6s ease-in-out infinite;
+}
+
+/* 4. (Optional) Give each image a slightly different animation timing */
+.header-image:first-child {
+  animation-delay: 0s;
+}
+.header-image:last-child {
+  animation-delay: -3s; /* Start halfway through */
+}
